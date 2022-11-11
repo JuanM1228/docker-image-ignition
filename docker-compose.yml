@@ -15,8 +15,8 @@ services:
       args:
         IGNITION_VERSION: ${IGNITION_VERSION:-8.1.18}
         SUPPLEMENTAL_MODULES: "azureiotinjector mqttengine"
-        USERNAME: Juan M Herrera Hernandez
-        USER_EMAIL: juan.herrera@econ-tech.com
+        USERNAME: #Change username
+        USER_EMAIL: #Change username_email
         # GATEWAY_ADMIN_USERNAME: superadmin
       secrets:
         - gateway-admin-password
@@ -26,6 +26,7 @@ services:
     volumes:  # this volumes section is commented out for easier testing
     #   - gateway-data:/usr/local/bin/ignition/data
       - ./backups/Ignition-base.gwbk:/restore.gwbk
+      - ./projects:/usr/local/bin/ignition/data/projects
     environment:
       # Defining these below will perform a password reset, see the build above for 
       # updating/preloading the admin username/password in the `default` user source.

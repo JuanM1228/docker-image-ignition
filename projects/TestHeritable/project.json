@@ -1,0 +1,7 @@
+{
+  "title": "TestHeritable",
+  "description": "",
+  "parent": "global",
+  "enabled": true,
+  "inheritable": false
+}
