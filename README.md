@@ -1,37 +1,89 @@
-# Example Derived Image Solution for Ignition
+# 🐋 Contenedor Ignition
 
-This solution provides an example of how to implement a derived Ignition Docker image with the following features:
+El presente repositorio contiene la creación de un contenedor
+basado en una imagen de Ignition y Microsoft SQL server,
+integrando un script el cuál realiza auto-commits al momento 
+de realizar updates a proyectos, para posteriormente realizar push de
+forma manual a repositorios remotos
+###
+![Logo](https://econ-tech.com/wp-content/uploads/2022/05/logo-econ.png)
+##
+## ✏️ Parametros personalizables
+La mayoria de estos parametros se encuentran en el archivo `docker-compose.yml`
 
-- Adding third-party modules such as MQTT Engine and Azure Injector.
-- Bundling an integrated gateway backup.
-- Setting default username and password of `default` built-in user source.
-- Shimming the entrypoint script with a spot to introduce custom functionality to run prior to launching the gateway.
-
-## How to Build
-
-Run the command git config --global core.autoclrf false.
-
-Clone the repository https://github.com/JuanM1228/docker-image-ignition.git
-
-Before you get started, create a file called `gw-secrets/GATEWAY_ADMIN_PASSWORD` with the password that you want to associate with the `admin` user.  There is special functionality built into the "prep" stage of the multi-stage build that updates the `default` user source from the built-in gateway backup with your desired baseline password.  This is converted to a one-way salt+hash for storage in the gwbk.
-
-There is a `docker-compose.yml` solution that can be used to build the image. Change the user and user email located in args, after that you can build+run the image with:
-
-```
-docker compose up --build -d
+#### 📌 Version de Ignition
+```http
+  IGNITION_VERSION: ${IGNITION_VERSION:-**VERSION**}
+  IGNITION_VERSION: ${IGNITION_VERSION:-8.1.22} #EXAMPLE
 ```
 
-Note that the resultant gateway that will launch at http://localhost:8090 does not have a volume associated with it in order to assist with rapid testing of changes.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `IGNITION_VERSION` | `string` | **Requerida**. Versión de ignition|
 
-If you want to build the image with `docker build`, you can use something like the command below:
+#### 🙍 Usuario para commits en Git
 
-```
-docker build \
-    --build-arg IGNITION_VERSION=8.1.18 \
-    --build-arg SUPPLEMENTAL_MODULES="azureiotinjector mqttengine" \
-    --secret id=gateway-admin-password,src=gw-secrets/GATEWAY_ADMIN_PASSWORD \
-    -t myimage:mytag \
-    gw-build
+```http
+  USERNAME: **USERNAME**
+  USERNAME: Juan M Herrera Hernandez #EXAMPLE
 ```
 
-Run the command git config --global core.autoclrf true.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `USERNAME` | `string` | **Requerida**. Nombre usuario|
+
+
+#### 📧 Email de usuario para commits en Git
+
+```http
+  USERNAME: **USER_EMAIL**
+  USER_EMAIL: juan.herrera@econ-tech.com #EXAMPLE
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `USERNAME` | `string` | **Requerida**. Nombre usuario|
+
+#### 🌐 Puerto local a exponer para Gateway Ignition
+
+```http
+  - **PORT**:8088
+  - 8090:8088 #EXAMPLE
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `USERNAME` | `string` | **Requerida**. Nombre usuario|
+
+
+#### 📄 Contraseña usuario admin
+Si se desea cambiar la contraseña se deberá editar el archivo 
+`GATEWAY_ADMIN_PASSWORD` en la dirección `\gw-secrets\GATEWAY_ADMIN_PASSWORD`
+## 💿 Cómo crearlo
+
+Para realizar deploy del contenedor es necesario tener las siguientes
+herramientas:
+
+- Docker (https://www.docker.com/)
+- Git (https://git-scm.com/downloads)
+- Microsoft SQL server (https://www.microsoft.com/es-mx/sql-server/sql-server-downloads)
+
+
+Clonar repositorio remoto
+
+```bash
+  git clone "https://econ-dev@dev.azure.com/econ-dev/DevOps/_git/DevOps"
+```
+Ingresar por terminal a la ruta donde se encuentra repositorio clonado
+
+Configuración de finales de línea de git
+
+```bash
+  git config --global core.autocrlf true
+```
+
+Crear contenedor
+
+```bash
+  docker compose up --build -d
+```
